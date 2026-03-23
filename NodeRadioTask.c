@@ -54,6 +54,7 @@
 
 /*Crypto Header files*/
 #include "CryptoUtils.h"
+#include "CryptoUtils_TI.h"
 
 /* Standard C Libraries */
 #include <stdlib.h>
@@ -478,19 +479,19 @@ static void returnRadioOperationStatus(enum NodeRadioOperationStatus result)
 #endif
 Display_printf(hDisplaySerial, 1, 0, "DEBUG: About to encrypt");
 
-    /* Encrypt before sending */
-  /* CryptoStatus_t cryptoStatus = CryptoUtils_encrypt(tempPayload, encryptedPayload, 16);
-       Display_printf(hDisplaySerial, 2, 0, "DEBUG: Crypto status: %d", cryptoStatus);
+    /* Encrypt 16-byte payload using software AES-128 before transmission */
+    CryptoStatus_t cryptoStatus = CryptoUtils_TI_encrypt(tempPayload, encryptedPayload, 16);
+    Display_printf(hDisplaySerial, 2, 0, "DEBUG: Crypto status: %d", cryptoStatus);
 
-    if(cryptoStatus != CRYPTO_SUCCESS) {
+    if (cryptoStatus != CRYPTO_SUCCESS) {
         Display_printf(hDisplaySerial, 3, 0, "DEBUG: Crypto failed, returning");
         Event_post(radioOperationEventHandle, RADIO_EVENT_SEND_FAIL);
-        return;  // ← EXIT if encryption fails, don't retry
+        return;
     }
 
-   memcpy(currentRadioOperation.easyLinkTxPacket.payload, encryptedPayload, 16);
-*/
-    currentRadioOperation.easyLinkTxPacket.len = sizeof(struct DualModeSensorPacket);
+    memcpy(currentRadioOperation.easyLinkTxPacket.payload, encryptedPayload, 16);
+    currentRadioOperation.easyLinkTxPacket.len = 16;
+
 
     /* Setup retries */
     currentRadioOperation.maxNumberOfRetries = maxNumberOfRetries;

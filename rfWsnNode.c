@@ -46,6 +46,7 @@
 /* Application Header files */ 
 #include "NodeRadioTask.h"
 #include "NodeTask.h"
+#include "CryptoUtils_TI.h"
 
 
 /*
@@ -56,6 +57,9 @@ int main(void)
     /* Call driver init functions. */
     Board_initGeneral();
     Display_init();
+
+    /* Initialize software AES-128 crypto module */
+    CryptoUtils_TI_init();
 
     /* Initialize sensor node tasks */
     
